@@ -16,6 +16,8 @@ import nextstep.security.config.DelegatingFilterProxy;
 import nextstep.security.config.FilterChainProxy;
 import nextstep.security.config.SecurityFilterChain;
 import nextstep.security.context.SecurityContextHolderFilter;
+import nextstep.security.oauth.LoginRedirectFilter;
+import nextstep.security.oauth.OauthRedirectFilter;
 import nextstep.security.userdetails.UserDetails;
 import nextstep.security.userdetails.UserDetailsService;
 import org.springframework.context.annotation.Bean;
@@ -52,14 +54,16 @@ public class SecurityConfig {
         return new SecuredMethodInterceptor();
     }
 
-    @Bean
+
     public SecurityFilterChain securityFilterChain() {
         return new DefaultSecurityFilterChain(
                 List.of(
                         new SecurityContextHolderFilter(),
                         new UsernamePasswordAuthenticationFilter(userDetailsService()),
                         new BasicAuthenticationFilter(userDetailsService()),
-                        new AuthorizationFilter(requestAuthorizationManager())
+                        new AuthorizationFilter(requestAuthorizationManager()),
+                        new LoginRedirectFilter(),
+                        new OauthRedirectFilter()
                 )
         );
     }
